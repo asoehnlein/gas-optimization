@@ -93,54 +93,56 @@ describe("Gas1", function () {
   });
 
   //CAN BE adjusted to a level
-  it("Add users to whitelist and validate key users are added with correct tier", async function () {
-    await addToWhitelist();
-    let whitelistAddr1 = await gasContract.whitelist(addr1.address);
-    expect(parseInt(whitelistAddr1)).to.equal(1);
-    let whitelistAddr2 = await gasContract.whitelist(addr2.address);
-    expect(parseInt(whitelistAddr2)).to.equal(2);
-    let whitelistAddr3 = await gasContract.whitelist(addr3.address);
-    expect(parseInt(whitelistAddr3)).to.equal(3);
-  });
-  it("Whitelist transfer works", async function () {
-    await addToWhitelist();
-    const transferTx1 = await gasContract.transfer(addr1.address, 500, "acc1");
-    await transferTx1.wait();
-    const transferTx2 = await gasContract.transfer(addr2.address, 300, "acc2");
-    await transferTx2.wait();
-    const transferTx3 = await gasContract.transfer(addr3.address, 100, "acc2");
-    await transferTx3.wait();
-    let recipient1 = ethers.Wallet.createRandom();
-    let recipient2 = ethers.Wallet.createRandom();
-    let recipient3 = ethers.Wallet.createRandom();
-    let sendValue1 = 250;
-    let sendValue2 = 150;
-    let sendValue3 = 50;
-    const whiteTransferTx1 = await gasContract
-      .connect(addr1)
-      .whiteTransfer(recipient1.address, sendValue1, importantStruct);
-    await whiteTransferTx1.wait();
-    const whiteTransferTx2 = await gasContract
-      .connect(addr2)
-      .whiteTransfer(recipient2.address, sendValue2, importantStruct);
-    await whiteTransferTx2.wait();
-    const whiteTransferTx3 = await gasContract
-      .connect(addr3)
-      .whiteTransfer(recipient3.address, sendValue3, importantStruct);
-    await whiteTransferTx3.wait();
-    let rec1Balance = await gasContract.balanceOf(recipient1.address);
-    let rec2Balance = await gasContract.balanceOf(recipient2.address);
-    let rec3Balance = await gasContract.balanceOf(recipient3.address);
-    expect(sendValue1 - 1).to.equal(rec1Balance);
-    expect(sendValue2 - 2).to.equal(rec2Balance);
-    expect(sendValue3 - 3).to.equal(rec3Balance);
-    let acc1Balance = await gasContract.balanceOf(addr1.address);
-    let acc2Balance = await gasContract.balanceOf(addr2.address);
-    let acc3Balance = await gasContract.balanceOf(addr3.address);
-    expect(sendValue1 + 1).to.equal(acc1Balance);
-    expect(sendValue2 + 2).to.equal(acc2Balance);
-    expect(sendValue3 + 3).to.equal(acc3Balance);
-  });
+  if (true) {
+    it("Add users to whitelist and validate key users are added with correct tier", async function () {
+      await addToWhitelist();
+      let whitelistAddr1 = await gasContract.whitelist(addr1.address);
+      expect(parseInt(whitelistAddr1)).to.equal(1);
+      let whitelistAddr2 = await gasContract.whitelist(addr2.address);
+      expect(parseInt(whitelistAddr2)).to.equal(2);
+      let whitelistAddr3 = await gasContract.whitelist(addr3.address);
+      expect(parseInt(whitelistAddr3)).to.equal(3);
+    });
+    it("Whitelist transfer works", async function () {
+      await addToWhitelist();
+      const transferTx1 = await gasContract.transfer(addr1.address, 500, "acc1");
+      await transferTx1.wait();
+      const transferTx2 = await gasContract.transfer(addr2.address, 300, "acc2");
+      await transferTx2.wait();
+      const transferTx3 = await gasContract.transfer(addr3.address, 100, "acc2");
+      await transferTx3.wait();
+      let recipient1 = ethers.Wallet.createRandom();
+      let recipient2 = ethers.Wallet.createRandom();
+      let recipient3 = ethers.Wallet.createRandom();
+      let sendValue1 = 250;
+      let sendValue2 = 150;
+      let sendValue3 = 50;
+      const whiteTransferTx1 = await gasContract
+        .connect(addr1)
+        .whiteTransfer(recipient1.address, sendValue1, importantStruct);
+      await whiteTransferTx1.wait();
+      const whiteTransferTx2 = await gasContract
+        .connect(addr2)
+        .whiteTransfer(recipient2.address, sendValue2, importantStruct);
+      await whiteTransferTx2.wait();
+      const whiteTransferTx3 = await gasContract
+        .connect(addr3)
+        .whiteTransfer(recipient3.address, sendValue3, importantStruct);
+      await whiteTransferTx3.wait();
+      let rec1Balance = await gasContract.balanceOf(recipient1.address);
+      let rec2Balance = await gasContract.balanceOf(recipient2.address);
+      let rec3Balance = await gasContract.balanceOf(recipient3.address);
+      expect(sendValue1 - 1).to.equal(rec1Balance);
+      expect(sendValue2 - 2).to.equal(rec2Balance);
+      expect(sendValue3 - 3).to.equal(rec3Balance);
+      let acc1Balance = await gasContract.balanceOf(addr1.address);
+      let acc2Balance = await gasContract.balanceOf(addr2.address);
+      let acc3Balance = await gasContract.balanceOf(addr3.address);
+      expect(sendValue1 + 1).to.equal(acc1Balance);
+      expect(sendValue2 + 2).to.equal(acc2Balance);
+      expect(sendValue3 + 3).to.equal(acc3Balance);
+    });
+  }
 
   async function addToWhitelist() {
     let addrArray1 = [];
