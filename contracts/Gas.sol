@@ -51,21 +51,11 @@ contract GasContract  {
 
     event AddedToWhitelist(address userAddress, uint256 tier);
 
+    error Unauthorized();
+
     modifier onlyAdminOrOwner() {
-        address senderOfTx = msg.sender;
-        if (checkForAdmin(senderOfTx)) {
-            require(
-                checkForAdmin(senderOfTx),
-                "Gas Contract Only Admin Check-  Caller not admin"
-            );
-            _;
-        } else if (senderOfTx == contractOwner) {
-            _;
-        } else {
-            revert(
-                "Error in Gas contract - onlyAdminOrOwner modifier : revert happened because the originator of the transaction was not the admin, and furthermore he wasn't the owner of the contract, so he cannot run this function"
-            );
-        }
+        _checkOnlyAdminOrOwner();
+        _;
     }
 
     modifier checkIfWhiteListed(address sender) {
@@ -301,5 +291,11 @@ contract GasContract  {
         newImportantStruct.bigValue = _struct.bigValue;
         newImportantStruct.valueB = _struct.valueB;
         emit WhiteListTransfer(_recipient);
+    }
+
+    function _checkOnlyAdminOrOwner() private view {
+        if (msg.sender != contractOwner || !checkForAdmin(msg.sender)) {
+            revert Unauthorized();
+        }
     }
 }
