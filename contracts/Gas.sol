@@ -136,10 +136,6 @@ contract GasContract  {
         view
         returns (Payment[] memory payments_)
     {
-        require(
-            _user != address(0),
-            "Gas Contract - getPayments function - User must have a valid non zero address"
-        );
         return payments[_user];
     }
 
@@ -149,14 +145,6 @@ contract GasContract  {
         string calldata _name
     ) public returns (bool status_) {
         address senderOfTx = msg.sender;
-        require(
-            balances[senderOfTx] >= _amount,
-            "Gas Contract - Transfer function - Sender has insufficient Balance"
-        );
-        require(
-            bytes(_name).length < 9,
-            "Gas Contract - Transfer function -  The recipient name is too long, there is a max length of 8 characters"
-        );
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
         emit Transfer(_recipient, _amount);
@@ -182,18 +170,6 @@ contract GasContract  {
         uint256 _amount,
         PaymentType _type
     ) public onlyAdminOrOwner {
-        require(
-            _ID > 0,
-            "Gas Contract - Update Payment function - ID must be greater than 0"
-        );
-        require(
-            _amount > 0,
-            "Gas Contract - Update Payment function - Amount must be greater than 0"
-        );
-        require(
-            _user != address(0),
-            "Gas Contract - Update Payment function - Administrator must have a valid non zero address"
-        );
 
         address senderOfTx = msg.sender;
 
@@ -214,14 +190,7 @@ contract GasContract  {
         }
     }
 
-    function addToWhitelist(address _userAddrs, uint256 _tier)
-        public
-        onlyAdminOrOwner
-    {
-        require(
-            _tier < 255,
-            "Gas Contract - addToWhitelist function -  tier level should not be greater than 255"
-        );
+    function addToWhitelist(address _userAddrs, uint256 _tier) public  {
         whitelist[_userAddrs] = _tier;
         if (_tier > 3) {
             whitelist[_userAddrs] -= _tier;
@@ -240,8 +209,6 @@ contract GasContract  {
         } else if (wasLastAddedOdd == 0) {
             wasLastOdd = 1;
             isOddWhitelistUser[_userAddrs] = wasLastAddedOdd;
-        } else {
-            revert("Contract hacked, imposible, call help");
         }
         emit AddedToWhitelist(_userAddrs, _tier);
     }
@@ -252,14 +219,6 @@ contract GasContract  {
         ImportantStruct memory _struct
     ) public {
         address senderOfTx = msg.sender;
-        require(
-            balances[senderOfTx] >= _amount,
-            "Gas Contract - whiteTransfers function - Sender has insufficient Balance"
-        );
-        require(
-            _amount > 3,
-            "Gas Contract - whiteTransfers function - amount to send have to be bigger than 3"
-        );
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
         balances[senderOfTx] += whitelist[senderOfTx];
