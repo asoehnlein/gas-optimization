@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
 
-import "./Ownable.sol";
 
-contract GasContract is Ownable {
+contract GasContract  {
     uint256 public immutable totalSupply; // cannot be updated
     uint256 public paymentCounter = 0;
     mapping(address => uint256) public balances;
