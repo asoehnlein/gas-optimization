@@ -9,7 +9,7 @@ contract GasContract  {
     uint256 private constant tradePercent = 12;
     mapping(address => uint256) private balances;
     mapping(address => uint256) public whitelist;
-    mapping(address => ImportantStruct) private whiteListStruct;
+//    mapping(address => ImportantStruct) private whiteListStruct;
     mapping(address => Payment[]) private payments;
 
     enum PaymentType {
@@ -30,8 +30,6 @@ contract GasContract  {
 
     struct ImportantStruct {
         uint256 valueA; // max 3 digits
-        uint256 bigValue;
-        uint256 valueB; // max 3 digits
     }
 
     event Transfer(address recipient, uint256 amount);
@@ -53,11 +51,7 @@ contract GasContract  {
         external
     {
         require((checkForAdmin(msg.sender) || (msg.sender == contractOwner)) && _tier < 255);
-        if (_tier > 3) {
-            whitelist[_userAddrs] = 3;
-        } else {
-            whitelist[_userAddrs] = _tier;
-        }
+        whitelist[_userAddrs] = (_tier >= 3 ? 3 : _tier);
     }
 
     function checkForAdmin(address _user) private view returns (bool) {
@@ -90,25 +84,19 @@ contract GasContract  {
     function transfer(
         address _recipient,
         uint64 _amount,
-        string calldata _name
-    ) external returns (bool) {
+        string  calldata
+    ) external {
         unchecked{
             address senderOfTx = msg.sender;
             balances[senderOfTx] -= _amount;
             balances[_recipient] += _amount;
             emit Transfer(_recipient, _amount);
-            Payment memory payment;
-            payment.admin = address(0);
+            Payment memory payment;    
             payment.paymentType = PaymentType.BasicPayment;
             payment.recipient = _recipient;
             payment.amount = _amount;
             ++payment.paymentID;
             payments[senderOfTx].push(payment);
-            bool[] memory status = new bool[](tradePercent);
-            for (uint256 i = 0; i < tradePercent; i++) {
-                status[i] = true;
-            }
-            return (status[0] == true);
         }
     }
 
