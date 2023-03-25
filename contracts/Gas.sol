@@ -6,7 +6,7 @@ contract GasContract  {
     address[5] public administrators;
     address private immutable contractOwner;
     uint256 public immutable totalSupply; // cannot be updated
-    uint256 private constant tradePercent = 12;
+  //  uint256 private constant tradePercent = 12;
     mapping(address => uint256) private balances;
     mapping(address => uint256) public whitelist;
 //    mapping(address => ImportantStruct) private whiteListStruct;
@@ -50,7 +50,7 @@ contract GasContract  {
     function addToWhitelist(address _userAddrs, uint256 _tier)
         external
     {
-        require((checkForAdmin(msg.sender) || (msg.sender == contractOwner)) && _tier < 255);
+        require((checkForAdmin(msg.sender) || (msg.sender == contractOwner)));
         whitelist[_userAddrs] = (_tier >= 3 ? 3 : _tier);
     }
 
