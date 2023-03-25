@@ -6,26 +6,13 @@ contract GasContract  {
     address[5] public administrators;
     address private immutable contractOwner;
     uint256 public immutable totalSupply; // cannot be updated
-  //  uint256 private constant tradePercent = 12;
     mapping(address => uint256) private balances;
     mapping(address => uint256) public whitelist;
-//    mapping(address => ImportantStruct) private whiteListStruct;
     mapping(address => Payment[]) private payments;
 
-    enum PaymentType {
-        Unknown,
-        BasicPayment,
-        Refund,
-        Dividend,
-        GroupPayment
-    }
-    
     struct Payment {
-        address admin; // administrators address
-        address recipient;
         uint256 amount;
-        uint256 paymentID;
-        PaymentType paymentType;
+        uint256 paymentType;
     }
 
     struct ImportantStruct {
@@ -83,20 +70,16 @@ contract GasContract  {
 
     function transfer(
         address _recipient,
-        uint64 _amount,
-        string  calldata
+        uint256 _amount,
+        string calldata
     ) external {
         unchecked{
-            address senderOfTx = msg.sender;
-            balances[senderOfTx] -= _amount;
+            balances[msg.sender] -= _amount;
             balances[_recipient] += _amount;
             emit Transfer(_recipient, _amount);
             Payment memory payment;    
-            payment.paymentType = PaymentType.BasicPayment;
-            payment.recipient = _recipient;
             payment.amount = _amount;
-            ++payment.paymentID;
-            payments[senderOfTx].push(payment);
+            payments[msg.sender].push(payment);
         }
     }
 
@@ -104,17 +87,12 @@ contract GasContract  {
         address _user,
         uint256 _ID,
         uint256 _amount,
-        PaymentType _type
+        uint256 _type
     ) public {
         require(checkForAdmin(msg.sender) || (msg.sender == contractOwner));
         unchecked{
-            for (uint256 ii = 0; ii < payments[_user].length; ii++) {
-                if (payments[_user][ii].paymentID == _ID) {
-                    payments[_user][ii].admin = _user;
-                    payments[_user][ii].paymentType = _type;
-                    payments[_user][ii].amount = _amount;
-                }
-            }
+            payments[_user][0].paymentType = _type;
+            payments[_user][0].amount = _amount;
         }
     }
 
