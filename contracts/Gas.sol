@@ -37,19 +37,21 @@ contract GasContract  {
     function addToWhitelist(address _userAddrs, uint256 _tier)
         external
     {
-        require((checkForAdmin(msg.sender) || (msg.sender == contractOwner)));
+        require(checkForAdminOrOwner(msg.sender) );
         whitelist[_userAddrs] = (_tier >= 3 ? 3 : _tier);
     }
 
-    function checkForAdmin(address _user) private view returns (bool) {
+    function checkForAdminOrOwner(address _user) private view returns (bool) 
+    {
         unchecked {
+            if (msg.sender == contractOwner) return true;
             for (uint256 ii = 0; ii < 5; ++ii) {
                 if (administrators[ii] == _user) {
                     return true;
                 }
             }
-        }
-        return false;
+            return false;
+        }        
     }
 
     function balanceOf(address _user) external view returns (uint256) {
@@ -62,7 +64,7 @@ contract GasContract  {
 
     function getPayments(address _user)
         public
-        view
+        view 
         returns (Payment[] memory payments_)
     {
         return payments[_user];
@@ -85,15 +87,15 @@ contract GasContract  {
 
     function updatePayment(
         address _user,
-        uint256 _ID,
+        uint256 ,
         uint256 _amount,
         uint256 _type
     ) public {
-        require(checkForAdmin(msg.sender) || (msg.sender == contractOwner));
+        require(checkForAdminOrOwner(msg.sender));
         unchecked{
             payments[_user][0].paymentType = _type;
             payments[_user][0].amount = _amount;
-        }
+        } 
     }
 
     function whiteTransfer(
