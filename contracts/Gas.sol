@@ -36,7 +36,7 @@ contract GasContract  {
         external
     {
         require(checkForAdmins(msg.sender) );
-        whitelist[_userAddrs] = (_tier > 2 ? 3 : _tier);
+        whitelist[_userAddrs] = (_tier &3);
     }
 
     function checkForAdmins(address _user) private view returns (bool) 
