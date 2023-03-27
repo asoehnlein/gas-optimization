@@ -24,12 +24,10 @@ contract GasContract  {
     constructor(address[5] memory _admins, uint256 _totalSupply) {
         contractOwner = msg.sender;
         totalSupply = _totalSupply;
+        balances[msg.sender] = totalSupply;
         unchecked {
             for (uint256 ii = 0; ii < 5; ++ii) {
                 administrators[ii] = _admins[ii];
-                if (_admins[ii] == msg.sender) {
-                    balances[msg.sender] = totalSupply;
-                }
             }
         }
     }
