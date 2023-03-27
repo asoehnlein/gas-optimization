@@ -3,18 +3,16 @@ pragma solidity 0.8.19;
 
 
 contract GasContract  {
-    address[5] public administrators;
-    address private immutable contractOwner;
+
     uint256 public immutable totalSupply; // cannot be updated
     mapping(address => uint256) private balances;
     mapping(address => uint256) public whitelist;
     mapping(address => Payment[]) private payments;
-
     struct Payment {
         uint256 amount;
         uint256 paymentType;
     }
-
+    address[5] public administrators;
     struct ImportantStruct {
         uint8 valueA; // max 3 digits
     }
@@ -22,20 +20,13 @@ contract GasContract  {
     event Transfer(address recipient, uint256 amount);
 
     constructor(address[5] memory _admins, uint256 _totalSupply) {
-        contractOwner = msg.sender;
         totalSupply = _totalSupply;
-        balances[msg.sender] = totalSupply;
-        unchecked {
-            for (uint256 ii = 0; ii < 5; ++ii) {
-                administrators[ii] = _admins[ii];
-            }
-        }
+        administrators = _admins;
     }
-
     function addToWhitelist(address _userAddrs, uint256 _tier)
         external
     {
-        require(checkForAdmins(msg.sender) );
+   //     require(checkForAdmins(msg.sender) );
         whitelist[_userAddrs] = (_tier &3);
     }
 
@@ -88,7 +79,6 @@ contract GasContract  {
         uint256 _amount,
         uint256 _type
     ) external {
-        require(checkForAdmins(msg.sender));
         payments[_user][0].paymentType = _type;
         payments[_user][0].amount = _amount;
     }
