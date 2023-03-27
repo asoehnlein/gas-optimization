@@ -60,7 +60,7 @@ contract GasContract  {
     }
 
     function getPayments(address _user)
-        public
+        external
         view 
         returns (Payment[] memory payments_)
     {
