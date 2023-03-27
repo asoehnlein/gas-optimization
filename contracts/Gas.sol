@@ -3,13 +3,12 @@ pragma solidity 0.8.19;
 
 
 contract GasContract  {
-    address[5] public administrators;
     address private immutable contractOwner;
     uint256 public immutable totalSupply; // cannot be updated
     mapping(address => uint256) private balances;
     mapping(address => uint256) public whitelist;
     mapping(address => Payment[]) private payments;
-
+    
     struct Payment {
         uint256 amount;
         uint256 paymentType;
@@ -18,6 +17,8 @@ contract GasContract  {
     struct ImportantStruct {
         uint8 valueA; // max 3 digits
     }
+
+    address[5] public administrators;
 
     event Transfer(address recipient, uint256 amount);
 
