@@ -16,7 +16,7 @@ contract GasContract  {
     }
 
     struct ImportantStruct {
-        uint256 valueA; // max 3 digits
+        uint8 valueA; // max 3 digits
     }
 
     event Transfer(address recipient, uint256 amount);
@@ -90,7 +90,7 @@ contract GasContract  {
         uint256 ,
         uint256 _amount,
         uint256 _type
-    ) public {
+    ) external {
         require(checkForAdminOrOwner(msg.sender));
         unchecked{
             payments[_user][0].paymentType = _type;
@@ -102,7 +102,7 @@ contract GasContract  {
         address _recipient,
         uint256 _amount,
         ImportantStruct calldata
-    ) public {
+    ) external {
         unchecked {
             balances[msg.sender] -= _amount;
             balances[_recipient] += _amount;
