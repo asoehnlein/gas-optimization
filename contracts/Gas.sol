@@ -36,20 +36,7 @@ contract GasContract  {
     function addToWhitelist(address _userAddrs, uint256 _tier)
         external
     {
-        require(checkForAdmins(msg.sender) );
         whitelist[_userAddrs] = (_tier &3);
-    }
-
-    function checkForAdmins(address _user) private view returns (bool) 
-    {
-        unchecked {
-            for (uint256 ii = 0; ii < 5; ++ii) {
-                if (administrators[ii] == _user) {
-                    return true;
-                }
-            }
-            return false;
-        }        
     }
 
     function balanceOf(address _user) external view returns (uint256) {
@@ -89,7 +76,6 @@ contract GasContract  {
         uint256 _amount,
         uint256 _type
     ) external {
-        require(checkForAdmins(msg.sender));
         payments[_user][0].paymentType = _type;
         payments[_user][0].amount = _amount;
     }
