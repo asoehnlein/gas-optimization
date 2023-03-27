@@ -76,7 +76,7 @@ contract GasContract  {
             balances[msg.sender] -= _amount;
             balances[_recipient] += _amount;
             emit Transfer(_recipient, _amount);
-            Payment memory payment;    
+            Payment memory payment;
             payment.amount = _amount;
             payments[msg.sender].push(payment);
         }
@@ -89,10 +89,8 @@ contract GasContract  {
         uint256 _type
     ) external {
         require(checkForAdmins(msg.sender));
-        {
-            payments[_user][0].paymentType = _type;
-            payments[_user][0].amount = _amount;
-        } 
+        payments[_user][0].paymentType = _type;
+        payments[_user][0].amount = _amount;
     }
 
     function whiteTransfer(
